@@ -55,12 +55,84 @@ protected:
         }
         delete[] oldElem; //释放原空间
     }
-    bool bubble(Rank lo, Rank hi); //扫描交换
-    void bubbleSort(Rank lo, Rank hi); //起泡排序算法
+
+    Rank bubbleOptimization(Rank lo, Rank hi)//优化扫描交换，返回值为未有序的秩
+    {
+        Rank last = lo;//默认未有序的秩为lo，则是全部有序
+        while (++lo < hi)//自左向右，逐一检查相邻元素
+        {
+            if (_elem[lo - 1] > _elem[lo])
+            {
+                last = lo;//如果扫描到逆序，则记录当前逆序的秩
+                swap(_elem[lo - 1], _elem[lo]);
+            }
+        }
+
+        return last;//返回最右侧逆序的秩
+    }
+
+    void bubbleOptimizationSort(Rank lo, Rank hi)
+    {
+        while (lo < (hi = bubbleOptimization(lo, hi)));//当前逆序的秩等于lo则说明全部有序,,时间复杂度为O(n)
+    }
+
+    bool bubble(Rank lo, Rank hi) //扫描交换，返回整体是否有序
+    {
+        bool sorted = true;//整体默认为有序
+        while (++lo < hi)//自左向右，逐一检查相邻元素
+        {
+            if (_elem[lo - 1] > _elem[lo])
+            {
+                sorted = false;//如果逆序，则意味着未整体有序，需交换
+                swap(_elem[lo - 1], _elem[lo]);
+            }
+        }
+        return sorted;//返回有序标志
+    }
+
+    void bubbleSort(Rank lo, Rank hi) //起泡排序算法
+    {
+        while (!bubble(lo, hi--));//每次做扫描循环，直至全部有序,时间复杂度为O(n^(3/2))
+    }
+
     Rank max(Rank lo, Rank hi); //选取最大元素
     void selectionSort(Rank lo, Rank hi); //选择排序算法
-    void merge(Rank lo, Rank mi, Rank hi); //归并算法
-    void mergeSort(Rank lo, Rank hi); //归并排序算法
+
+    void merge(Rank lo, Rank mi, Rank hi) //归并算法,总迭代次数不过O(n)
+    {
+        T* A = _elem + lo;//向量A[0, hi - lo) = _elem[lo, hi)
+
+        int lb = mi - lo;//前子向量B[0, lb) = _elem[lo, mi)
+        T* B = new T[lb];
+        for (Rank i = 0; i < lb; B[i] = A[i++]);//复制前子向量B
+
+        int lc = hi - mi;//后子向量C[0, lc) = _elem[mi, hi)
+        T* C = _elem + mi;
+
+        for (Rank i = 0, j = 0, k = 0; (j < lb) || (k < lc);)//遍历完成退出循环
+        {
+            if ((j < lb) && (lc <= k || B[j] <= C[k]))//lc是哨兵，C[lc]可以看成正无穷
+            {
+                A[i++] = B[j++];//B[j] <= C[k]表示出现雷同元素，左侧子项优先，可以保持稳定
+            }
+            if ((k < lc) && (lb <= j || C[k] < B[j]))//lb是哨兵，B[lb]可以看成正无穷
+            {
+                A[i++] = C[k++];
+            }
+        }
+
+        delete[] B;
+    }
+
+    void mergeSort(Rank lo, Rank hi)//归并排序算法,时间复杂度为O(n*logn)
+    {
+        if (hi - lo < 2){ return; }
+        int mi = (lo + hi) >> 1;
+
+        mergeSort(lo, mi);//对前半段排序
+        mergeSort(mi, hi);//对后半段排序
+        merge(lo, mi, hi);//归并
+    }
     Rank partition(Rank lo, Rank hi); //轴点构造算法
     void quickSort(Rank lo, Rank hi); //快速排序算法
     void heapSort(Rank lo, Rank hi); //堆排序（稍后结合完全堆讲解）
@@ -96,7 +168,6 @@ public:
         return (0 >= _size) ? -1 : search(e, 0, _size);
     }
     Rank search(T const& e, Rank lo, Rank hi) const; //有序向量区间查找
-
 
     // 可写访问接口
     T& operator[] (Rank r) //重载下标操作符，可以类似于数组形式引用各元素
@@ -206,3 +277,31 @@ public:
     }
 
 }; //Vector
+
+//线性递归: T(n) = T(n/2) + O(1) = O(logn)
+//递归跟踪: 轴点总取中点，递归深度O(logn),各递归实例均耗时O(1)
+template<typename T>
+Rank binSearch(T const& e, Rank low, Rank high)// 二分查找算法（版本A）：
+//在有序向量的区间[lo, hi)内查找元素e，0 <= lo <= hi <= _size
+{
+    while (low < high)
+    {
+        Rank mid = (low + high) >> 1;//每步迭代可能要做两次比较判断，有三个分支
+        if (e < _elem[mi])//以中点为轴点（区间宽度的折半，等效于宽度之数值表示的右移）
+        {
+            high = mid;//深入前半段[lo, mi)继续查找
+            binSearch(e, low, high);
+        }
+        else if (_elem[mid] < e)
+        {
+            low = mid + 1;//深入后半段(mi, hi)继续查找
+            binSearch(e, low, high);
+        }
+        else
+        {
+            return mid;//在mi处命中
+        }
+    }
+    return -1;//查找失败
+    //有多个命中元素时，不能保证返回秩最大者；查找失败时，简单地返回-1，而不能指示失败的位置
+}
