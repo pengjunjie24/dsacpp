@@ -12,9 +12,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChapterTwo\Vector.cpp" />
-    <ClCompile Include="test.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ChapterThree\List.hpp" />
+    <ClInclude Include="ChapterThree\ListNode.hpp" />
     <ClInclude Include="ChapterTwo\Vector.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

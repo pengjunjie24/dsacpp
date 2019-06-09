@@ -15,15 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="test.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="ChapterTwo\Vector.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChapterTwo\Vector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChapterThree\ListNode.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChapterThree\List.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
