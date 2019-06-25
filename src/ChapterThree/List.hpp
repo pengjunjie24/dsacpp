@@ -65,10 +65,36 @@ public:
 
     ListNodePosi(T) search(T const& e) const //有序列表查找
     {
-        return search(e, _size, trailer);
+        return search(e, _size, _trailer);
     }
-    ListNodePosi(T) search(T const& e, int n, ListNodePosi(T) p) const; //有序区间查找
-    ListNodePosi(T) selectMax(ListNodePosi(T) p, int n); //在p及其n-1个后继中选出最大者
+
+    ListNodePosi(T) search(T const& e, int n, ListNodePosi(T) p) const //有序区间查找,
+    //在有序列表内节点p的n个(真)前驱中，找到不大于e的最后者，O(n),时间复杂度与无序一致
+    {
+        while (0 <= n--)//对于p的最近几个n前驱，从右向左
+        {
+            if (((p = p->pred)->data) <= e)//一个个比较
+            {
+                break;
+            }
+        }
+        return p;//直至命中，数值越界或者范围越界后，返回查找终止位置
+    }
+
+    ListNodePosi(T) selectMax(ListNodePosi(T) p, int n) //在p及其n-1个后继中选出最大者
+    {
+        ListNodePosi(T) pMax = p;//暂定最大元素为首节点p
+        ListNodePosi(T) pCur = p;//当前元素为p
+        for (int i = 1; i < n; ++i)
+        {
+            pMax = ((pMax->data) < ((pCur = pCur->succ)->data)) ?
+            pCur : pMax;//当前最大元素小于当前元素，更新当前最大元素
+            //对多个相同的pMax做处理，选取最靠后的的pMax
+        }
+
+        return pMax;//返回最大节点位置
+    }
+
     ListNodePosi(T) selectMax() { return selectMax(header->succ, _size);} //整体最大者
 
     // 可写访问接口
@@ -108,7 +134,7 @@ public:
     void sort(ListNodePosi(T) p, int n); //列表区间排序
     void sort() { sort(first(), _size); } //列表整体排序
 
-    int deduplicate() //无序去重
+    int deduplicate() //无序去重, O(n^2)
     {
         if (_size < 2)//规模小于2不可能有重复元素
         {
@@ -117,14 +143,40 @@ public:
         int oldSize = _size;
         ListNodePosi(T) p = first();
         Rank r = 1;//从首节点起
-        while (_trailer != (p = p->succ))
+        while (_trailer != (p = p->succ))//O(n)
         {
-            ListNodePosi(T) q = find(p->data, r, p);
+            ListNodePosi(T) q = find(p->data, r, p);//O(n)
             q ? remove(q) : ++r;//删除q不删除p的原因:防止p指针失效
         }
         return oldSize - _size;//被删除元素总数
     }
-    int uniquify(); //有序去重
+
+    int uniquify() //有序去重，O(n)
+    {
+        if (_size < 2)//平凡列表自然无重复
+        {
+            return 0;
+        }
+
+        int oldSize = _size;//记录原规模
+        ListNodePosi(T) p = first();
+        ListNodePosi(T) q;
+
+        while (_trailer != (q = p->succ))//没有到尾哨兵节点，O(n)
+        {
+            if (p->data != q->data)//反复考察相邻节点，互异转向下一个节点
+            {
+                p = q;
+            }
+            else
+            {
+                remove(q);//雷同则删除后者,O(1)
+            }
+        }
+
+        return oldSize - _size;//被删除元素总数
+    }
+
     void reverse(); //前后倒置（习题）
 
     // 遍历
@@ -169,8 +221,43 @@ protected:
     }
     void merge(ListNodePosi(T)&, int, List<T>&, ListNodePosi(T), int);//归并
     void mergeSort(ListNodePosi(T)& p, int n);//对从p开始连续的n个节点归并排序
-    void selectionSort(ListNodePosi(T) p, int n);//对从p开始连续的n个节点选择排序
-    void insertionSort(ListNodePosi(T) p, int n);//对从p开始连续的n个节点插入排序
+
+    void selectionSort(ListNodePosi(T) p, int n)//对从p开始连续的n个节点选择排序,最好和最坏的情况都是O(n^2)
+    {
+        ListNodePosi(T) head = p->pred;
+        ListNodePosi(T) tail = p;
+        for (int i = 0; i < n; ++i)//head和tail是头/尾哨兵节点
+        {
+            tail = tail->succ;
+        }
+
+        while (1 < n)//从待排区间找出最大者，并移至有序区间前端
+        {
+            //new和delete操作是常规操作时间的100倍左右,下面这个步骤效率很低
+            //insertB(tail, remove(selectMax(head->succ, n)));//将当前最大元素插入尾哨兵之前
+
+            //交换数据域即可
+            ListNodePosi(T) pCurMax = selectMax(head->succ, n);//选择出最靠后的pMax,插入到尾部，保证了算法稳定性,O(n)
+            ListNodePosi(T) pLastNode = tail->pred;
+            T tmpData = pCurMax->data;
+            pCurMax->data = pLastNode->data;
+            pLastNode->data = tmpData;
+
+            tail = tail->pred;//待排区间和有序区间范围不断更新
+            --n;
+        }
+    }
+
+    //insertSort可以用逆序对来衡量性能，它是输入敏感的排序
+    void insertionSort(ListNodePosi(T) p, int n)//对从p开始连续的n个节点插入排序
+    {
+        for (int r = 0; r < n; ++r)//n次迭代,每次O(r+1)
+        {
+            insertA(search(p->data, r, p), p->data);//查询+插入
+            p = p->succ;//转向下一个节点
+            remove(p->pred);
+        }
+    }//仅用O(1)的辅助空间，属于就地算法
 
 private:
     int _size;//大小

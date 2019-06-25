@@ -1,4 +1,8 @@
 
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
+
+#include <assert.h>
 
 typedef int Rank; //秩
 #define DEFAULT_CAPACITY  3 //默认的初始容量（实际应用中可设置为更大）
@@ -95,7 +99,7 @@ protected:
         while (!bubble(lo, hi--));//每次做扫描循环，直至全部有序,时间复杂度为O(n^(3/2))
     }
 
-    Rank max(Rank lo, Rank hi); //选取最大元素
+    Rank max(Rank lo, Rank hi) { return (lo < hi) ? hi : lo; } //选取最大元素
     void selectionSort(Rank lo, Rank hi); //选择排序算法
 
     void merge(Rank lo, Rank mi, Rank hi) //归并算法,总迭代次数不过O(n)
@@ -276,32 +280,35 @@ public:
         }
     }
 
+    //线性递归: T(n) = T(n/2) + O(1) = O(logn)
+    //递归跟踪: 轴点总取中点，递归深度O(logn),各递归实例均耗时O(1)
+    Rank binSearch(T const& e, Rank low, Rank high)// 二分查找算法（版本A）：
+    //在有序向量的区间[lo, hi)内查找元素e，0 <= lo <= hi <= _size
+    {
+        while (low < high)
+        {
+            Rank mid = (low + high) >> 1;//每步迭代可能要做两次比较判断，有三个分支
+            if (e < _elem[mid])//以中点为轴点（区间宽度的折半，等效于宽度之数值表示的右移）
+            {
+                high = mid;//深入前半段[lo, mid)继续查找
+                binSearch(e, low, high);
+            }
+            else if (_elem[mid] < e)
+            {
+                low = mid + 1;//深入后半段(mid, hi)继续查找
+                binSearch(e, low, high);
+            }
+            else
+            {
+                return mid;//在mi处命中
+            }
+        }
+        return -1;//查找失败
+        //有多个命中元素时，不能保证返回秩最大者；查找失败时，简单地返回-1，而不能指示失败的位置
+    }
+
 }; //Vector
 
-//线性递归: T(n) = T(n/2) + O(1) = O(logn)
-//递归跟踪: 轴点总取中点，递归深度O(logn),各递归实例均耗时O(1)
-template<typename T>
-Rank binSearch(T const& e, Rank low, Rank high)// 二分查找算法（版本A）：
-//在有序向量的区间[lo, hi)内查找元素e，0 <= lo <= hi <= _size
-{
-    while (low < high)
-    {
-        Rank mid = (low + high) >> 1;//每步迭代可能要做两次比较判断，有三个分支
-        if (e < _elem[mi])//以中点为轴点（区间宽度的折半，等效于宽度之数值表示的右移）
-        {
-            high = mid;//深入前半段[lo, mi)继续查找
-            binSearch(e, low, high);
-        }
-        else if (_elem[mid] < e)
-        {
-            low = mid + 1;//深入后半段(mi, hi)继续查找
-            binSearch(e, low, high);
-        }
-        else
-        {
-            return mid;//在mi处命中
-        }
-    }
-    return -1;//查找失败
-    //有多个命中元素时，不能保证返回秩最大者；查找失败时，简单地返回-1，而不能指示失败的位置
-}
+
+
+#endif
