@@ -5,7 +5,7 @@
   > Created Time: 2019年06月25日 星期二 15时33分57秒
  ************************************************************************/
 
-#include "Stack.hpp"
+#include <Stack/Stack.hpp>
 
 #include <iostream>
 
@@ -169,6 +169,7 @@ float evaluate(char* s)
     }
 
     //std::cout << "opnd :" << opnd.top() << std::endl;
+    return opnd.top();
 }
 
 int main()
