@@ -23,5 +23,5 @@ private:
     Rank* _F;//规模为N的向量F，记录[k]被标记的次序（即其在栈T[]中的秩）
 
     Rank* _T;//容量为_N的栈_T，记录被标记各位秩的栈
-    Rank _top;//栈顶指针_top
+    Rank _top;//栈顶指针_top，被标记个数
 };

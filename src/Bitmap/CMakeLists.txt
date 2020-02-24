@@ -1,3 +1,5 @@
 
-aux_source_directory(. bitmap)
-add_executable(MainInitBitmapO1 ${bitmap})
+aux_source_directory(. bitmap_src)
+add_library(bitmap ${bitmap_src})
+
+add_subdirectory(tests)

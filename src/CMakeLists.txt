@@ -41,5 +41,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}
 )
 
+add_subdirectory(Print)
 add_subdirectory(Stack)
 add_subdirectory(Bitmap)
+add_subdirectory(BinTree)

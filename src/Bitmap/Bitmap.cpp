@@ -27,6 +27,11 @@ Bitmap::~Bitmap()
     _M = NULL;
 }
 
+void Bitmap::reset()
+{
+    memset(_M, 0, _N);
+}
+
 void Bitmap::set(int k)
 {
     expand(k);

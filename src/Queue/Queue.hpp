@@ -5,12 +5,12 @@
 #include <List/List.hpp>
 
 template <typename T>
-class Queue : public List<T>//¶ÓÁĞÄ£°åÀà£¨¼Ì³ĞListÔ­ÓĞ½Ó¿Ú£©
+class Queue : public List<T>//é˜Ÿåˆ—æ¨¡æ¿ç±»ï¼ˆç»§æ‰¿ListåŸæœ‰æ¥å£ï¼‰
 {
-public://size(), empty()ÒÔ¼°ÆäËû¿ª·¢½Ó¿Ú¾ù¿ÉÖ±½ÓÑØÓÃ
-    void enqueue(T const& e) { insertAsLast(e); } //Èë¶Ó£ºÎ²²¿²åÈë
-    T dequeue() { return remove(first()); } //³ö¶Ó£ºÊ×²¿É¾³ı
-    T& front() { return first()->data; } //¶ÓÊ×
+public://size(), empty()ä»¥åŠå…¶ä»–å¼€å‘æ¥å£å‡å¯ç›´æ¥æ²¿ç”¨
+    void enqueue(T const& e) { this->insertAsLast(e); } //å…¥é˜Ÿï¼šå°¾éƒ¨æ’å…¥
+    T dequeue() { return this->remove(this->first()); } //å‡ºé˜Ÿï¼šé¦–éƒ¨åˆ é™¤
+    T& front() { return this->first()->data; } //é˜Ÿé¦–
 };
 
 #endif

@@ -12,6 +12,7 @@ public:
     Bitmap(char* file, int n = 8);//按指定或默认规模，从指定文件中读取比特图
     ~Bitmap();//析构时释放比特图空间
 
+    void reset();//复位
     void set(int k);
     void clear(int k);
     bool test(int k);

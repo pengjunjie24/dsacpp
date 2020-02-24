@@ -1,7 +1,6 @@
 
 
-#ifndef LIST_HPP
-#define LIST_HPP
+#pragma once
 
 #include <List/ListNode.hpp>
 
@@ -31,11 +30,11 @@ public:
     ListNodePosi(T) search(T const& e) const { return search(e, _size, _trailer); }//有序列表查找
     ListNodePosi(T) search(T const& e, int n, ListNodePosi(T) p) const; //有序区间查找
     ListNodePosi(T) selectMax(ListNodePosi(T) p, int n); //在p及其n-1个后继中选出最大者
-    ListNodePosi(T) selectMax() { return selectMax(header->succ, _size);} //整体最大者
+    ListNodePosi(T) selectMax() { return selectMax(_header->succ, _size);} //整体最大者
 
     // 可写访问接口
-    ListNodePosi(T) insertAsFirst(T const& e) { insertA(first(), e); }//将e当作首节点插入
-    ListNodePosi(T) insertAsLast(T const& e) { insertB(last(), e); }//将e当作末节点插入
+    ListNodePosi(T) insertAsFirst(T const& e) { return insertA(first(), e); }//将e当作首节点插入
+    ListNodePosi(T) insertAsLast(T const& e) { return insertB(last(), e); }//将e当作末节点插入
     ListNodePosi(T) insertA(ListNodePosi(T) p, T const& e); //将e当作p的后继插入（After）
     ListNodePosi(T) insertB(ListNodePosi(T) p, T const& e); //将e当作p的前驱插入（Before）
     T remove(ListNodePosi(T) p); //删除合法位置p处的节点,返回被删除节点
