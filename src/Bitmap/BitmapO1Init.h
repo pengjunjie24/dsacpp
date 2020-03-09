@@ -2,7 +2,6 @@
 
 #pragma once
 
-#pragma warning(disable : 4996 4800)
 typedef int Rank;
 
 //位图Bitmap01Init类：以空间作为补偿，节省初始化时间（既允许插入，亦支持删除）

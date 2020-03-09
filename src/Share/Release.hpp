@@ -7,6 +7,8 @@
  ******************************************************************************************/
 #pragma once
 
+#include <stddef.h>
+
 template<typename T>
 struct Cleaner
 {
@@ -31,6 +33,7 @@ struct Cleaner<T*>
         if (x)//如果其中包含指针，递归释放
         {
             delete x;
+            x = NULL;
         }
 #ifdef _DEBUG
         static int n = 0;

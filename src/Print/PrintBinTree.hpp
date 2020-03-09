@@ -8,35 +8,35 @@
 #define L_CHILD 1
 #define R_CHILD -1*L_CHILD
 
-//¶ş²æÊ÷Êä³ö´òÓ¡
+//äºŒå‰æ ‘è¾“å‡ºæ‰“å°
 template <typename T>
-void UniPrint::p(BinTree<T>& bt) //¶ş²æÊ÷
+void UniPrint::p(BinTree<T>& bt) //äºŒå‰æ ‘
 {
-    printf("BinTree\tname:%s\tpoint:%p\tsize:%d:\n", typeid(bt).name(), &bt, bt.size());//»ù±¾ĞÅÏ¢
-    Bitmap01Init* branchType = new Bitmap01Init;//¼ÇÂ¼µ±Ç°½Úµã×æÏÈµÄ·½Ïò
+    printf("BinTree\tname:%s\tpoint:%p\tsize:%d:\n", typeid(bt).name(), &bt, bt.size());//åŸºæœ¬ä¿¡æ¯
+    Bitmap01Init* branchType = new Bitmap01Init;//è®°å½•å½“å‰èŠ‚ç‚¹ç¥–å…ˆçš„æ–¹å‘
     printBinTree(bt.root(), -1, ROOT, branchType);
     release(branchType);
     printf("\n");
 }
 
-//¶ş²æÊ÷¸÷ÖÖÅÉÉúÀàÍ³Ò»´òÓ¡
+//äºŒå‰æ ‘å„ç§æ´¾ç”Ÿç±»ç»Ÿä¸€æ‰“å°
 template <typename T>
 static void printBinTree(BinNodePosi(T) bt, int depth, int type, Bitmap01Init* bType)
 {
-    if (!bt)//µİ¹é»ù
+    if (!bt)//é€’å½’åŸº
     {
         return;
     }
 
-    if (-1 < depth)
+    if (-1 < depth)//è®¾ç½®å½“å‰å±‚çš„æ‹å‘æ ‡å¿—
     {
         R_CHILD == type ? bType->set(depth) : bType->clear(depth);
     }
 
-    printBinTree(bt->rc, depth + 1, R_CHILD, bType);
+    printBinTree(bt->rc, depth + 1, R_CHILD, bType);//å³å­æ ‘ï¼ˆåœ¨ä¸Šï¼‰
     print(bt);
     printf(" *");
-    for (int i = -1; i < depth; ++i)
+    for (int i = -1; i < depth; ++i)//æ ¹æ®ç›¸é‚»å„å±‚çš„æ‹å‘æ˜¯å¦ä¸€è‡´ï¼Œå³å¯ç¡®å®šæ˜¯å¦åº”è¯¥æ‰“å°æ¨ªçº¿
     {
         if ((0 > i) || bType->test(i) == bType->test(i + 1))
         {
@@ -46,17 +46,20 @@ static void printBinTree(BinNodePosi(T) bt, int depth, int type, Bitmap01Init* b
         {
             printf("|        ");
         }
-        switch (type)
-        {
-        case R_CHILD:
-            printf("©°©¤");
-            break;
-        case  L_CHILD:
-            printf("©¸©¤");
-            break;
-        default:
-            printf("©¤©¤"); //root
-            break;
-        }
     }
+    switch (type)
+    {
+    case R_CHILD:
+        printf("â”Œâ”€");
+        break;
+    case  L_CHILD:
+        printf("â””â”€");
+        break;
+    default:
+        printf("â”€â”€"); //root
+        break;
+    }
+    print(bt);
+    printf("\n");
+    printBinTree(bt->lc, depth + 1, L_CHILD, bType); //å·¦å­æ ‘ï¼ˆåœ¨ä¸‹ï¼‰
 }

@@ -1,13 +1,13 @@
 
 #pragma once
 
-//BinNode½Úµã
+//BinNodeèŠ‚ç‚¹
 template<typename T>
 void UniPrint::p(BinNode<T>& node)
 {
     p(node.data);
 
-    //¸¸×ÓÁ´Ö¸Õë
+    //çˆ¶å­é“¾æŒ‡é’ˆ
     printf(((node.lc && (&node != node.lc->parent))
         || (node.rc && (&node != node.rc->parent)))
         ? "@" : " ");

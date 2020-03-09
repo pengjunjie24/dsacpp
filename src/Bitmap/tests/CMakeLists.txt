@@ -1,0 +1,3 @@
+
+add_executable(MainInitBitmapO1 MainInitBitmapO1.cpp)
+target_link_libraries(MainInitBitmapO1 bitmap)

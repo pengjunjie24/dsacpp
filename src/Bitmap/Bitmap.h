@@ -2,8 +2,6 @@
 
 #pragma once
 
-#pragma warning(disable : 4996 4800)
-
 //位图
 class Bitmap
 {

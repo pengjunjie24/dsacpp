@@ -14,14 +14,10 @@ int BinTree<T>::updateHeight(BinNodePosi(T) x) //更新节点x的高度,具体�
 template < typename T>
 void BinTree<T>::updateHeightAbove(BinNodePosi(T) x) //更新节点x及其祖先的高度
 {
-    int preHeight = x->height;
-    if (preHeight != updateHeight(x))//高度不变，即可终止
+    while (x)//TODO:高度不变时
     {
-        while (x)
-        {
-            updateHeight(x);
-            x = x->parent;
-        }
+        updateHeight(x);
+        x = x->parent;
     }
 }//O(n = depth(x))
 

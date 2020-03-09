@@ -148,17 +148,16 @@ void travInI3(BinNodePosi(T) x, VST& visit)//二叉树中序遍历算法（迭�
         else//否则——无左子树或刚刚回溯（相当于无左子树）
         {
             visit(x->data); //访问该节点
-            if (HasRChild(*x))
+            if (HasRChild(*x))//若其右子树非空，则深入右子树继续遍历
             {
-                //若其右子树非空，则
-                x = x->rc; //深入右子树继续遍历
+                x = x->rc;
                 backtrack = false; //并关闭回溯标志
             }
-            else//若右子树空，则
+            else//若右子树空，则回溯
             {
-                if (!(x = x->succ()))
+                if (!(x = x->succ()))//含抵达末节点时的退出返回
                 {
-                    break; //回溯（含抵达末节点时的退出返回）
+                    break;
                 }
                 backtrack = true; //并设置回溯标志
             }
@@ -171,23 +170,22 @@ void travInI4(BinNodePosi(T) x, VST& visit)//二叉树中序遍历（迭代版#4
 {
     while (true)
     {
-        if (HasLChild(*x)) //若有左子树，则
+        if (HasLChild(*x)) //若有左子树，则深入遍历左子树
         {
-            x = x->lc; //深入遍历左子树
+            x = x->lc;
         }
         else
         {
-            //否则
-            visit(x->data); //访问当前节点，并
-            while (!HasRChild(*x)) //不断地在无右分支处
+            visit(x->data);//否则访问当前节点
+            while (!HasRChild(*x)) //不断地在无右分支处回溯至直接后继
             {
-                if (x = x->succ())
+                if (!(x = x->succ()))//在没有后继的末节点处，直接退出
                 {
-                    return; //回溯至直接后继（在没有后继的末节点处，直接退出）
+                    return;
                 }
-                else
+                else//否则访问新的当前节点
                 {
-                    visit(x->data); //访问新的当前节点
+                    visit(x->data);
                 }
             }
             x = x->rc; //（直至有右分支处）转向非空的右子树
