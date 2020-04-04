@@ -35,15 +35,15 @@ bool randomBinTree(BinTree<T>& bt, BinNodePosi(T) x, int h)
 template<typename T>
 BinNodePosi(T) randomPosiInBinTree(BinNodePosi(T) root)
 {
-    if (!HasChild(*root))
+    if (!HasChild(root))
     {
         return root;
     }
-    if (!HasLChild(*root))
+    if (!HasLChild(root))
     {
         return dice(6) ? randomPosiInBinTree(root->rc) : root;
     }
-    if (!HasRChild(*root))
+    if (!HasRChild(root))
     {
         return dice(6) ? randomPosiInBinTree(root->lc) : root;
     }

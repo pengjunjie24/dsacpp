@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <BinTree/BinNodeDefine.h>
+#include <BinTree/BinNodeMacro.h>
 
 #include <Stack/Stack.hpp>
 #include <Queue/Queue.hpp>
@@ -30,11 +30,11 @@ void travPreI1(BinNodePosi(T) x, VST& visit) //二叉树先序遍历算法（迭
     {
         x = S.pop();
         visit(x->data); //弹出并访问当前节点，其非空孩子的入栈次序为先右后左
-        if (HasRChild(*x))
+        if (HasRChild(x))
         {
             S.push(x->rc);//右孩子先入后出
         }
-        if (HasLChild(*x))
+        if (HasLChild(x))
         {
             S.push(x->lc);//左孩子后入先出
         }
@@ -141,14 +141,14 @@ void travInI3(BinNodePosi(T) x, VST& visit)//二叉树中序遍历算法（迭�
     bool backtrack = false; //前一步是否刚从右子树回溯——省去栈，仅O(1)辅助空间
     while (true)
     {
-        if (!backtrack && HasLChild(*x)) //若有左子树且不是刚刚回溯，则
+        if (!backtrack && HasLChild(x)) //若有左子树且不是刚刚回溯，则
         {
             x = x->lc; //深入遍历左子树
         }
         else//否则——无左子树或刚刚回溯（相当于无左子树）
         {
             visit(x->data); //访问该节点
-            if (HasRChild(*x))//若其右子树非空，则深入右子树继续遍历
+            if (HasRChild(x))//若其右子树非空，则深入右子树继续遍历
             {
                 x = x->rc;
                 backtrack = false; //并关闭回溯标志
@@ -170,14 +170,14 @@ void travInI4(BinNodePosi(T) x, VST& visit)//二叉树中序遍历（迭代版#4
 {
     while (true)
     {
-        if (HasLChild(*x)) //若有左子树，则深入遍历左子树
+        if (HasLChild(x)) //若有左子树，则深入遍历左子树
         {
             x = x->lc;
         }
         else
         {
             visit(x->data);//否则访问当前节点
-            while (!HasRChild(*x)) //不断地在无右分支处回溯至直接后继
+            while (!HasRChild(x)) //不断地在无右分支处回溯至直接后继
             {
                 if (!(x = x->succ()))//在没有后继的末节点处，直接退出
                 {
@@ -210,9 +210,9 @@ static void gotoHLVFL(Stack<BinNodePosi(T)>& S)//沿途所遇节点依次入栈
 {
     while (BinNodePosi(T) x = S.top()) //自顶而下，反复检查当前节点（即栈顶）
     {
-        if (HasLChild(*x))//尽可能向左
+        if (HasLChild(x))//尽可能向左
         {
-            if (HasRChild(*x))
+            if (HasRChild(x))
             {
                 S.push(x->rc); //若有右孩子，优先入栈
             }

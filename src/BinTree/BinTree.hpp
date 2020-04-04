@@ -16,10 +16,11 @@ protected:
 
 public:
     BinTree(); //构造函数
-    ~BinTree(); //析构函数
+    virtual ~BinTree(); //析构函数
     int size() const { return _size; } //规模
     bool empty() const { return !_root; } //判空
     BinNodePosi(T) root() const { return _root; } //树根
+    BinNodePosi(T)& fromParentTo(BinNodePosi(T) x); //父节点中子节点x的引用
     BinNodePosi(T) insertAsRoot(T const& e); //插入根节点
     BinNodePosi(T) insertAsLC(BinNodePosi(T) x, T const& e); //e作为x的左孩子（原无）插入
     BinNodePosi(T) insertAsRC(BinNodePosi(T) x, T const& e); //e作为x的右孩子（原无）插入

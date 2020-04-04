@@ -46,6 +46,9 @@ struct BinNode
  // 比较器、判等器（各列其一，其余自行补充）
     bool operator< (BinNode const& bn) { return data < bn.data; } //小于
     bool operator== (BinNode const& bn) { return data == bn.data; } //等于
+
+    BinNodePosi(T) zig(); //顺时针旋转
+    BinNodePosi(T) zag(); //逆时针旋转
 };
 
 #include <BinTree/BinNodeImplementation.hpp>

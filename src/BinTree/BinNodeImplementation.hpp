@@ -2,7 +2,7 @@
 #pragma once
 
 #include <BinTree/BinNodeTraverse.hpp>
-#include <BinTree/BinNodeDefine.h>
+#include <BinTree/BinNodeMacro.h>
 #include <Stack/Stack.hpp>
 #include <Queue/Queue.hpp>
 
@@ -52,12 +52,14 @@ int BinNode<T>::size() //统计当前节点后代总数，亦即以其为根的�
 template <typename T>
 BinNodePosi(T) BinNode<T>::insertAsLC(T const& e) //作为当前节点的左孩子插入新节点
 {
+    assert(!lc);
     return lc = new BinNode(e, this);
 }
 
 template <typename T>
 BinNodePosi(T) BinNode<T>::insertAsRC(T const& e) //作为当前节点的右孩子插入新节点
 {
+    assert(!rc);
     return rc = new BinNode(e, this);
 }
 
@@ -74,7 +76,7 @@ BinNodePosi(T) BinNode<T>::succ() //取当前节点的直接后继(中序遍历)
         //若有右孩子，则直接后继必在右子树中，
         //具体地就是右子树中最靠左（最小）的节点
         s = rc;
-        while (HasLChild(*s))
+        while (HasLChild(s))
         {
             s = s->lc;
         }
@@ -84,7 +86,7 @@ BinNodePosi(T) BinNode<T>::succ() //取当前节点的直接后继(中序遍历)
         //否则，直接后继应是“将当前节点包含于其左子树中的最低祖先”，
         //具体地就是逆向地沿右向分支，
         //不断朝左上方移动最后再朝右上方移动一步，即抵达直接后继（如果存在）
-        while (IsRChild(*s))
+        while (IsRChild(s))
         {
             s = s->parent;
         }
@@ -102,11 +104,11 @@ void BinNode<T>::travLevel(VST& visit) //子树层次遍历
     {
         BinNodePosi(T) x = Q.dequeue(); //取出队首节点并访问之
         visit(x->data);
-        if (HasLChild(*x))//左孩子入队
+        if (HasLChild(x))//左孩子入队
         {
             Q.enqueue(x->lc);
         }
-        if (HasRChild(*x))//右孩子入队
+        if (HasRChild(x))//右孩子入队
         {
             Q.enqueue(x->rc);
         }
@@ -165,4 +167,16 @@ void BinNode<T>::travPost(VST& visit) //子树后序遍历
         travPostR(this, visit);
         break;
     }
+}
+
+template <typename T>
+BinNodePosi(T) BinNode<T>::zig()
+{
+
+}
+
+template <typename T>
+BinNodePosi(T) BinNode<T>::zag()
+{
+
 }

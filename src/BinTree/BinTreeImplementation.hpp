@@ -38,6 +38,12 @@ BinTree<T>::~BinTree()  //析构函数
 }
 
 template < typename T>
+BinNodePosi(T)& BinTree<T>::fromParentTo(BinNodePosi(T) x)
+{
+    return ( IsRoot(x) ? _root : (IsLChild(x) ? x->parent->lc : x->parent->rc) );
+}
+
+template < typename T>
 BinNodePosi(T) BinTree<T>::insertAsRoot(T const& e) //插入根节点
 {
     assert(!_root);
@@ -98,7 +104,7 @@ BinNodePosi(T) BinTree<T>::attachAsRC(BinNodePosi(T) x, BinTree<T>* &S) //S作�
 template <typename T>
 int BinTree<T>::remove(BinNodePosi(T) x)
 {
-    FromParentTo(*x) = NULL;
+    fromParentTo(x) = NULL;
     updateHeightAbove(x->parent);
     int n = removeAt(x);
     _size -= n;
@@ -121,7 +127,7 @@ static int removeAt(BinNodePosi(T) x)
 template <typename T>//二叉树子树分离算法：将子树x从当前树中摘除，将其封装为一棵独立子树返回
 BinTree<T>* BinTree<T>::secede(BinNodePosi(T) x)
 {
-    FromParentTo(*x) = NULL; //切断来自父节点的指针
+    fromParentTo(x) = NULL;
     updateHeightAbove(x->parent); //更新原树中所有祖先的高度
     BinTree<T>* S = new BinTree<T>; //新树以x为根
     S->_root = x;

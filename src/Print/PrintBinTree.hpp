@@ -63,3 +63,15 @@ static void printBinTree(BinNodePosi(T) bt, int depth, int type, Bitmap01Init* b
     printf("\n");
     printBinTree(bt->lc, depth + 1, L_CHILD, bType); //左子树（在下）
 }
+
+//基于BST实现的AVL
+//其中调用的BinNode的打印例程，可以显示BF状态
+template<typename T>
+void UniPrint::p(AVL<T>& avl)
+{
+    printf("%s[%p]*%d:\n", typeid (avl).name(), &avl, avl.size()); //基本信息
+    Bitmap01Init* branchType = new Bitmap01Init; //记录当前节点祖先的方向
+    printBinTree(avl.root(), -1, ROOT, branchType); //树状结构
+    release(branchType);
+    printf("\n");
+}
