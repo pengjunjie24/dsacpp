@@ -7,6 +7,7 @@
 #include <BinTree/BinTree.hpp>
 #include <BinTree/BinNode.hpp>
 #include <AVL/AVL.hpp>
+#include <Splay/Splay.hpp>
 
 #include <stdio.h>
 
@@ -25,6 +26,8 @@ public:
     static void p(BinTree<T>&); //二叉树
     template <typename T>
     static void p(AVL<T>&); //AVL
+    template <typename T>
+    static void p(Splay<T>&); //Splay
 };
 
 template <typename T> static void print(T& x) { UniPrint::p(x); }
