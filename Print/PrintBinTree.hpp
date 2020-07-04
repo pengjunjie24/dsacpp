@@ -87,3 +87,15 @@ void UniPrint::p(Splay<T>& avl)
     release(branchType);
     printf("\n");
 }
+
+// * 基于BST实现的RedBlack
+//其中调用的BinNode的打印例程，可以显示BF状态
+template <typename T>
+void UniPrint::p(RedBlack<T>& rb)
+{
+    printf("%s[%p]*%d:\n", typeid (rb).name(), &rb, rb.size());
+    Bitmap01Init* branchType = new Bitmap01Init; //记录当前节点祖先的方向
+    printBinTree(rb.root(), -1, ROOT, branchType);
+    release(branchType);
+    printf("\n");
+}
