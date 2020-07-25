@@ -1,4 +1,4 @@
-﻿
+
 /******************************************************************************************
  * 将vector各方法的实现部分，简洁地引入Vector.hpp
  * 效果等同于将这些实现直接汇入vector.h
@@ -8,8 +8,10 @@
 #pragma once
 
 #include <Vector/VectorSearch.hpp>
+#include <Share/Utility.hpp>
 
 #include <assert.h>
+#include <stddef.h>
 
 template <typename T>
 void Vector<T>::copyFrom(T const* A, Rank lo, Rank hi) //复制数组区间A[lo, hi)
@@ -30,14 +32,7 @@ void Vector<T>::expand() //空间不足时扩容,加倍扩容分摊时间成本�
         return;
     }
 
-    _capacity = max(_capacity, DEFAULT_CAPACITY);//不低于最小容量
-    T* oldElem = _elem;
-    _elem = new T[_capacity <<= 1];//容量加倍
-    for (int i = 0; i < _size; ++i)
-    {
-        _elem[i] = oldElem[i];//复制原向量内容（T为基本类型，或已重载赋值操作符'='）
-    }
-    delete[] oldElem;//释放原空间
+    reserve(2 * _capacity);
 }
 
 template <typename T>
@@ -177,6 +172,62 @@ const T& Vector<T>::operator[] (Rank r) const //仅限于做右值的重载版�
     return _elem[r];
 }
 
+template <typename T>
+Vector<T>& Vector<T>::operator= (Vector<T> const& V)
+{
+    if (_elem)//释放原有内容
+    {
+        delete _elem;
+        _elem = NULL;
+    }
+
+    copyFrom(V._elem, 0, V.size());//整体复制
+    return *this; //返回当前对象的引用，以便链式赋值
+}
+
+template <typename T>
+void Vector<T>::reserve(Rank newCapacity)
+{
+    if (_capacity < newCapacity)
+    {
+        T* oldElem = _elem;
+        _elem = new T[newCapacity];
+
+        //复制原向量内容（T为基本类型，或已重载赋值操作符'='）
+        for (int i = 0; i < _size; ++i)
+        {
+            _elem[i] = oldElem[i];
+        }
+        delete[] oldElem;//释放原空间
+        _capacity = newCapacity;
+    }
+}
+
+template <typename T>
+void Vector<T>::resize(Rank newSize, T value)
+{
+    if (newSize > _capacity)
+    {
+        //扩容按照当前容量2倍以上
+        Rank newCapacity = (newSize > 2 * _capacity) ? newSize : (2 * _capacity);
+        reserve(newCapacity);
+
+        //赋值新元素
+        for (int i = _size; i < newSize; ++i)
+        {
+            _elem[i] = value;
+        }
+
+        _capacity = newCapacity;
+        _size = newSize;
+    }
+}
+
+template <typename T>
+void Vector<T>::swap(Vector<T>& v)
+{
+    utility::swap(*this, v);
+}
 
 //不基于remove(r)接口，实现remove(lo, hi),是因为会导致后者复杂度到O(n^2)
 //每次调用remove(r) = n - hi = O(n),可能实现remove(lo, hi) = O(n^2)

@@ -29,7 +29,7 @@ protected:
 
 public:
     // 构造函数
-    Vector(int c = DEFAULT_CAPACITY, int s = 0, T v = 0) //容量为c、规模为s、所有元素初始为v
+    Vector(int c = DEFAULT_CAPACITY, int s = 0, T v = T()) //容量为c、规模为s、所有元素初始为v
     {
         _elem = new T[_capacity = c];
         for (_size = 0; _size < s; _elem[_size++] = v);
@@ -56,8 +56,13 @@ public:
     T& operator[] (Rank r); //重载下标操作符，可以类似于数组形式引用各元素
     const T& operator[] (Rank r) const; //仅限于做右值的重载版本
     Vector<T> & operator= (Vector<T> const&); //重载赋值操作符，以便直接克隆向量
+    void reserve(Rank newCapacity);
+    void resize(Rank newSize, T value = T());
+    void swap(Vector<T>& v);
+
     T remove(Rank r); //删除秩为r的元素
     int remove(Rank lo, Rank hi); //删除秩在区间[lo, hi)之内的元素
+    void clear() { remove(0, _size); }
     Rank insert(Rank r, T const& e); //插入元素
     Rank insert(T const& e) { return insert(_size, e); } //默认作为末元素插入
     void sort(Rank lo, Rank hi); //对[lo, hi)排序
